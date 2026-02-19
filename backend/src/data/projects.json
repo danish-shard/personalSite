@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "title": "Food Chatbot MCP",
+    "description": "AI-powered food ordering chatbot with MCP architecture, multi-provider LLM routing, and Swiggy/Zomato integration.",
+    "tags": ["React", "Node.js", "AI", "MCP", "TypeScript"],
+    "year": "2024",
+    "link": "https://github.com/danishshard/food-chatbot-mcp"
+  },
+  {
+    "id": 2,
+    "title": "ResQ SaaS Platform",
+    "description": "Emergency response coordination platform with real-time dispatch, GPS tracking, and incident management.",
+    "tags": ["React", "Node.js", "WebSockets", "PostgreSQL"],
+    "year": "2024",
+    "link": "#"
+  },
+  {
+    "id": 3,
+    "title": "Swiggy Browser Extension",
+    "description": "Chrome extension for monitoring Swiggy delivery partner job availability with automated notifications.",
+    "tags": ["JavaScript", "Chrome API", "Node.js"],
+    "year": "2024",
+    "link": "#"
+  },
+  {
+    "id": 4,
+    "title": "Personal Site",
+    "description": "This site — creative portfolio with GSAP animations, Three.js 3D hero, magnetic cursor, and a Node.js backend.",
+    "tags": ["React", "Three.js", "GSAP", "Node.js"],
+    "year": "2025",
+    "link": "#"
+  }
+]
