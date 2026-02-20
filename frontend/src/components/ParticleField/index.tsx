@@ -50,20 +50,6 @@ const vertexShader = /* glsl */ `
     pos.z *= warpStretch;
     pos.xy *= warpCompress;
 
-    // ── Project to clip space for mouse repulsion ──────────────────────────
-    vec4 mvPos   = modelViewMatrix * vec4(pos, 1.0);
-    vec4 clipPos = projectionMatrix * mvPos;
-    vec2 ndc     = clipPos.xy / clipPos.w;
-
-    // ── Mouse repulsion ────────────────────────────────────────────────────
-    vec2  delta = ndc - uMouse;
-    float dist  = length(delta);
-    float influence = smoothstep(0.28, 0.0, dist);
-    // Push in world space (rough approximation via depth scale)
-    float depthScale = abs(mvPos.z) * 0.4 + 1.0;
-    pos.x += normalize(delta + 0.0001).x * influence * 0.8 * depthScale;
-    pos.y += normalize(delta + 0.0001).y * influence * 0.8 * depthScale;
-
     // ── Final projection ───────────────────────────────────────────────────
     vec4 finalMVPos = modelViewMatrix * vec4(pos, 1.0);
     gl_Position     = projectionMatrix * finalMVPos;

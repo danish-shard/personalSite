@@ -1,16 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Zen+Dots&family=Inter:wght@300;400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* Deep Space — default & dark mode */
   :root,
   .dark {
     --bg:            #020408;
     --bg-rgb:        2, 4, 8;
     --fg:            #e8e4ff;
+    --fg-dim:        #c8c6d0;
     --accent:        #c8ff00;
     --muted:         #7a7a9a;
     --border:        rgba(200, 200, 255, 0.08);
@@ -20,9 +18,11 @@
     --nebula-cyan:   #00e5ff;
     --nebula-violet: #9b6dff;
     --nebula-rose:   #ff6b9d;
+    --cyan:          #00e5ff;
+    --violet:        #9b6dff;
+    --rose:          #ff6b9d;
   }
 
-  /* Light mode — brighter nebula variant (still dark, particles need dark bg) */
   :root:not(.dark) {
     --bg:           #0c0e1a;
     --bg-rgb:       12, 14, 26;
@@ -34,7 +34,7 @@
 
   * { box-sizing: border-box; cursor: none; }
 
-  html { scroll-behavior: smooth; overflow-x: hidden; }
+  html { overflow-x: hidden; }
 
   body {
     margin: 0;
@@ -42,6 +42,7 @@
     color: var(--fg);
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
 
@@ -49,7 +50,7 @@
 }
 
 @layer utilities {
-  .font-display { font-family: 'Zen Dots', monospace; }
+  .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
 
   .text-gradient {
     background: linear-gradient(135deg, var(--accent) 0%, #00e5ff 60%);
@@ -133,10 +134,21 @@
     z-index: 9998;
   }
 
+  /* ── Section label (mobile sections) ── */
+  .section-label {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
   /* ── Marquee ── */
   .marquee-track { display: flex; width: max-content; }
 
   /* ── Split text ── */
   .char       { display: inline-block; overflow: hidden; }
   .char-inner { display: inline-block; }
+
 }

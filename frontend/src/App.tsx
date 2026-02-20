@@ -4,12 +4,12 @@ import { SoundProvider } from './context/SoundContext';
 import Cursor from './components/Cursor';
 import ParticleField from './components/ParticleField';
 import SpaceJourney from './components/SpaceJourney';
+import SpaceEffects from './components/SpaceEffects';
 import ContentOverlays from './components/ContentOverlays';
 import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
 import CockpitFrame from './components/CockpitFrame';
 import MusicButton from './components/MusicButton';
-// Mobile-only imports (traditional stacked layout)
 import Hero from './components/Hero';
 import About from './components/About';
 import Work from './components/Work';
@@ -23,7 +23,6 @@ export default function App() {
     typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
   );
 
-  // Keep isMobileRef in sync on resize
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)');
     const handler = (e: MediaQueryListEvent) => { isMobileRef.current = e.matches; };
@@ -38,25 +37,20 @@ export default function App() {
       <SoundProvider>
       <Cursor />
 
-      {/* ParticleField — always mounted */}
       <ParticleField />
 
       {!entered && <Preloader onComplete={() => setEntered(true)} />}
 
-      {/* ── Desktop cinematic layout ── */}
       {entered && !isMobile && (
         <>
-          {/* Fixed visual layer: rocket journey + cockpit + content overlays */}
           <SpaceJourney />
+          <SpaceEffects />
           <CockpitFrame />
           <ContentOverlays />
-
-          {/* 900vh scroll spacer — extended for Earth → Moon → Mars → Earth journey */}
           <div style={{ height: '900vh' }} />
         </>
       )}
 
-      {/* ── Mobile traditional layout ── */}
       {entered && isMobile && (
         <div style={{ opacity: 1, position: 'relative', zIndex: 2 }}>
           <main>
@@ -70,10 +64,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Navbar — always on top */}
       <Navbar />
-
-      {/* Music toggle — always visible, bottom-right corner */}
       <MusicButton />
       </SoundProvider>
     </ThemeProvider>

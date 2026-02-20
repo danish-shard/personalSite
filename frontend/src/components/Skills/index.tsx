@@ -1,83 +1,120 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ACCENT = '#c8ff00';
-
-const SKILL_GROUPS = [
+const CATEGORIES = [
   {
-    category: 'Frontend',
-    items: ['React', 'TypeScript', 'Next.js', 'Three.js', 'GSAP', 'Framer Motion', 'Tailwind CSS', 'Vite'],
+    label: 'Frontend',
+    color: '#c8ff00',
+    items: [
+      'React', 'TypeScript', 'GSAP', 'Three.js',
+      'Tailwind CSS', 'Next.js', 'Vite',
+    ],
   },
   {
-    category: 'Backend',
-    items: ['Node.js', 'Express', 'MongoDB', 'PostgreSQL', 'REST APIs', 'WebSocket', 'Redis'],
+    label: 'Backend',
+    color: '#00e5ff',
+    items: [
+      'Node.js', 'Express', 'MongoDB', 'PostgreSQL',
+      'REST APIs', 'WebSockets',
+    ],
   },
   {
-    category: 'AI & Infra',
-    items: ['LLM Integration', 'MCP Protocol', 'Claude / GPT', 'Prompt Engineering', 'Vercel', 'Railway', 'Docker'],
+    label: 'AI & LLMs',
+    color: '#9b6dff',
+    items: [
+      'MCP Protocol', 'LLM Integration', 'Prompt Engineering',
+      'OpenAI API', 'Chatbots',
+    ],
+  },
+  {
+    label: 'Tools & Infra',
+    color: '#ff6b9d',
+    items: [
+      'Git', 'Docker', 'Chrome Extensions', 'Figma',
+      'AWS', 'Linux',
+    ],
   },
 ];
 
 export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
-  const tilesRef   = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(tilesRef.current.filter(Boolean), {
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
-        opacity: 0, y: 30,
-        stagger: { amount: 0.8, from: 'random' },
-        duration: 0.6, ease: 'power3.out',
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
-  let tileIndex = 0;
+  useGSAP(() => {
+    const cards = sectionRef.current?.querySelectorAll('.skill-card') ?? [];
+    gsap.from(cards, {
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 75%',
+      },
+      y: 40,
+      opacity: 0,
+      duration: 0.7,
+      stagger: 0.1,
+      ease: 'power3.out',
+    });
+  }, { scope: sectionRef });
 
   return (
-    <section id="skills" ref={sectionRef} className="py-32 px-8 md:px-16 max-w-6xl mx-auto">
-      <p className="text-xs tracking-[0.4em] uppercase mb-16" style={{ color: 'var(--accent)' }}>
-        003 — Skills
+    <section
+      id="skills"
+      ref={sectionRef}
+      className="py-32 px-6 md:px-16 max-w-5xl mx-auto relative z-[2]"
+    >
+      <p className="section-label mb-4">Skills</p>
+      <h2
+        className="font-display font-bold leading-tight mb-6"
+        style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--fg)' }}
+      >
+        Technical <span className="text-gradient">Arsenal</span>
+      </h2>
+      <p
+        className="text-base leading-relaxed mb-16"
+        style={{ color: 'var(--muted)', maxWidth: 520 }}
+      >
+        The tools, frameworks, and technologies I use to bring ideas to life.
       </p>
 
-      <div className="space-y-6">
-        {SKILL_GROUPS.map((group) => (
-          <div key={group.category} className="glass glass-highlight p-8">
-            <h3 className="text-xs tracking-[0.3em] uppercase mb-6" style={{ color: 'var(--nebula-cyan)' }}>
-              {group.category}
-            </h3>
+      <div className="grid md:grid-cols-2 gap-5">
+        {CATEGORIES.map((cat) => (
+          <div
+            key={cat.label}
+            className="skill-card glass p-6 space-y-4"
+            style={{ borderTop: `2px solid ${cat.color}44` }}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{
+                  background: cat.color,
+                  boxShadow: `0 0 8px ${cat.color}88`,
+                }}
+              />
+              <span
+                className="font-display text-sm font-semibold tracking-wide"
+                style={{ color: cat.color }}
+              >
+                {cat.label}
+              </span>
+            </div>
+
             <div className="flex flex-wrap gap-2">
-              {group.items.map((skill) => {
-                const idx = tileIndex++;
-                return (
-                  <div
-                    key={skill}
-                    ref={(el) => { tilesRef.current[idx] = el; }}
-                    data-cursor="link"
-                    className="px-4 py-2 text-sm tracking-wide transition-all duration-300"
-                    style={{ border: '1px solid var(--glass-border)', color: 'var(--fg)', borderRadius: 6 }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.boxShadow = `0 0 12px ${ACCENT}66, inset 0 0 8px ${ACCENT}11`;
-                      el.style.borderColor = ACCENT;
-                      el.style.color = ACCENT;
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.boxShadow = '';
-                      el.style.borderColor = 'var(--glass-border)';
-                      el.style.color = 'var(--fg)';
-                    }}
-                  >
-                    {skill}
-                  </div>
-                );
-              })}
+              {cat.items.map((skill) => (
+                <span
+                  key={skill}
+                  className="text-sm px-3 py-1.5 rounded tracking-wide"
+                  style={{
+                    background: `${cat.color}0a`,
+                    border: `1px solid ${cat.color}22`,
+                    color: 'var(--fg-dim)',
+                  }}
+                >
+                  {skill}
+                </span>
+              ))}
             </div>
           </div>
         ))}

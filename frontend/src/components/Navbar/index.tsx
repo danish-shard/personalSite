@@ -3,7 +3,6 @@ import { gsap } from 'gsap';
 import { useTheme } from '../../context/ThemeContext';
 import { useMagnet } from '../../hooks/useMagnet';
 
-// Phase label based on scroll progress 0→1
 function getPhaseLabel(progress: number): string {
   if (progress < 0.18) return 'Earth';
   if (progress < 0.72) return 'Deep Space';
@@ -19,7 +18,6 @@ export default function Navbar() {
   const lastY    = useRef(0);
   const themeRef = useMagnet<HTMLButtonElement>();
 
-  // Hide/show on scroll direction (keep this behaviour)
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -35,7 +33,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Update phase label on scroll — direct DOM mutation, no React re-render
   useEffect(() => {
     const onScroll = () => {
       if (!labelRef.current) return;
@@ -53,7 +50,6 @@ export default function Navbar() {
       ref={navRef}
       className="glass-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5"
     >
-      {/* Logo */}
       <span
         className="font-display text-sm tracking-widest uppercase glow-text"
         style={{ color: 'var(--accent)' }}
@@ -62,7 +58,6 @@ export default function Navbar() {
         DS
       </span>
 
-      {/* Mission phase label — updates directly via DOM, no re-render */}
       <span
         ref={labelRef}
         className="hidden md:block text-xs tracking-[0.4em] uppercase"
@@ -71,7 +66,6 @@ export default function Navbar() {
         Earth
       </span>
 
-      {/* Theme toggle */}
       <button
         ref={themeRef}
         onClick={toggle}

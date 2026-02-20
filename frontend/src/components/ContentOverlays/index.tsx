@@ -20,40 +20,6 @@ const TAGS = [
   'React', 'TypeScript', 'Node.js', 'Three.js', 'GSAP', 'AI / LLMs', 'MCP Protocol', 'MongoDB', 'Tailwind', 'Vite',
 ];
 
-const PROJECTS = [
-  {
-    id: '01',
-    title: 'Food Chatbot MCP',
-    tags: ['React', 'Node.js', 'MCP', 'AI', 'MongoDB'],
-    description: 'AI-powered food ordering chatbot with Model Context Protocol integration — supports Zomato & Swiggy through a unified LLM orchestration layer.',
-    year: '2025',
-    accent: '#c8ff00',
-  },
-  {
-    id: '02',
-    title: 'ResQ SaaS Platform',
-    tags: ['React', 'Node.js', 'PostgreSQL', 'TypeScript'],
-    description: 'Field service management SaaS for inventory, spare parts, and job scheduling across enterprise clients.',
-    year: '2024',
-    accent: '#00e5ff',
-  },
-  {
-    id: '03',
-    title: 'Swiggy Browser Extension',
-    tags: ['Chrome Extension', 'TypeScript', 'AI'],
-    description: 'Browser extension that bridges an AI chatbot to Swiggy — lets users place orders via natural language conversation.',
-    year: '2025',
-    accent: '#ff6b9d',
-  },
-  {
-    id: '04',
-    title: 'Personal Site',
-    tags: ['React', 'GSAP', 'Three.js', 'TypeScript'],
-    description: 'This site. Built with a WebGL particle universe, GSAP ScrollTrigger, and a custom magnetic cursor for an immersive web experience.',
-    year: '2026',
-    accent: '#c8ff00',
-  },
-];
 
 const SKILLS_CATEGORIES = [
   {
@@ -195,79 +161,6 @@ function EarthPanel({ ref: panelRef }: { ref: React.RefObject<HTMLDivElement | n
           50% { transform: translateY(4px); }
         }
       `}</style>
-    </div>
-  );
-}
-
-// ─── WorkPanel ────────────────────────────────────────────────────────────────
-
-function WorkPanel({ ref: panelRef }: { ref: React.RefObject<HTMLDivElement | null> }) {
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  return (
-    <div ref={panelRef} style={panelBase}>
-      {/* Dark moon surface tint */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 80% 60% at 50% 80%, rgba(155,109,255,0.05) 0%, transparent 70%)',
-        }}
-      />
-
-      <div className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 max-w-6xl mx-auto py-24">
-        {/* Section label */}
-        <p className="text-xs tracking-[0.5em] uppercase mb-12" style={{ color: 'var(--nebula-cyan)' }}>
-          Moon Surface · Transmission Log
-        </p>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {PROJECTS.map((project, i) => (
-            <div
-              key={project.id}
-              ref={(el) => { cardRefs.current[i] = el; }}
-              data-cursor="view"
-              className="glass glass-highlight glass-glow relative flex flex-col gap-4 p-8 md:p-10 cursor-none overflow-hidden"
-              style={{ minHeight: 260 }}
-              onMouseEnter={(e) => {
-                gsap.to(e.currentTarget, { y: -6, duration: 0.4, ease: 'power2.out' });
-              }}
-              onMouseLeave={(e) => {
-                gsap.to(e.currentTarget, { y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
-              }}
-            >
-              <div className="flex justify-between items-start">
-                <span className="font-display text-xs" style={{ color: 'var(--muted)' }}>{project.id}</span>
-                <span className="text-xs tracking-widest" style={{ color: 'var(--muted)' }}>{project.year}</span>
-              </div>
-
-              <h3 className="font-display text-2xl md:text-3xl leading-tight" style={{ color: 'var(--fg)' }}>
-                {project.title}
-              </h3>
-
-              <p className="text-sm leading-relaxed flex-1" style={{ color: 'var(--muted)' }}>
-                {project.description}
-              </p>
-
-              <div className="flex flex-wrap gap-2 mt-2">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs px-2 py-1 tracking-wider uppercase"
-                    style={{ border: `1px solid ${project.accent}44`, color: project.accent, borderRadius: 4 }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div
-                className="absolute bottom-0 left-0 right-0 h-px"
-                style={{ background: `linear-gradient(to right, transparent, ${project.accent}88, transparent)` }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
@@ -746,7 +639,6 @@ function ContactPanel({ ref: panelRef }: { ref: React.RefObject<HTMLDivElement |
 
 export default function ContentOverlays() {
   const earthPanelRef   = useRef<HTMLDivElement>(null);
-  const workPanelRef    = useRef<HTMLDivElement>(null);
   const marsPanelRef    = useRef<HTMLDivElement>(null);
   const contactPanelRef = useRef<HTMLDivElement>(null);
 
@@ -770,30 +662,13 @@ export default function ContentOverlays() {
       },
     });
 
-    // ── EarthPanel: visible 0→14%, fades 14→18%
-    tl.fromTo(
-      earthPanelRef.current,
-      { opacity: 0, scale: 0.97 },
-      { opacity: 1, scale: 1, pointerEvents: 'auto', duration: 3, ease: 'power2.out' },
-      0
-    )
-    .to(
+    // ── EarthPanel: visible immediately on load, fades out 14→18%
+    gsap.set(earthPanelRef.current, { opacity: 1, scale: 1, pointerEvents: 'auto' });
+
+    tl.to(
       earthPanelRef.current,
       { opacity: 0, scale: 0.97, pointerEvents: 'none', duration: 4, ease: 'power2.in' },
       14
-    )
-
-    // ── WorkPanel: Moon surface — pods arrive first (72–82%), then full panel fades in 82→85%
-    .fromTo(
-      workPanelRef.current,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, pointerEvents: 'auto', duration: 3, ease: 'power2.out' },
-      82
-    )
-    .to(
-      workPanelRef.current,
-      { opacity: 0, y: -20, pointerEvents: 'none', duration: 4, ease: 'power2.in' },
-      90
     )
 
     // ── MarsPanel: Mars surface — fades in 97→98%, visible until 99%
@@ -821,7 +696,6 @@ export default function ContentOverlays() {
   return (
     <>
       <EarthPanel ref={earthPanelRef} />
-      <WorkPanel ref={workPanelRef} />
       <MarsPanel ref={marsPanelRef} />
       <ContactPanel ref={contactPanelRef} />
     </>
