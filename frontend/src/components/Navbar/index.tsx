@@ -3,6 +3,8 @@ import { gsap } from 'gsap';
 import { useTheme } from '../../context/ThemeContext';
 import { useMagnet } from '../../hooks/useMagnet';
 
+type NavbarMode = 'journey' | 'linear';
+
 function getPhaseLabel(progress: number): string {
   if (progress < 0.18) return 'Earth';
   if (progress < 0.72) return 'Deep Space';
@@ -11,7 +13,16 @@ function getPhaseLabel(progress: number): string {
   return 'Home';
 }
 
-export default function Navbar() {
+function getLinearLabel(activeId: string | null): string {
+  if (!activeId) return 'Home';
+  if (activeId === 'about') return 'About';
+  if (activeId === 'work') return 'Work';
+  if (activeId === 'skills') return 'Skills';
+  if (activeId === 'contact') return 'Contact';
+  return 'Home';
+}
+
+export default function Navbar({ mode = 'journey' }: { mode?: NavbarMode }) {
   const { toggle, theme } = useTheme();
   const navRef   = useRef<HTMLElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
@@ -34,16 +45,43 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    const labelEl = labelRef.current;
+    if (!labelEl) return;
+
+    if (mode === 'journey') {
+      const onScroll = () => {
+        const maxScroll = document.body.scrollHeight - window.innerHeight;
+        if (maxScroll <= 0) return;
+        const progress = window.scrollY / maxScroll;
+        labelEl.textContent = getPhaseLabel(progress);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+      return () => window.removeEventListener('scroll', onScroll);
+    }
+
+    // Linear mode: show the current section name.
+    const ids = ['about', 'work', 'skills', 'contact'] as const;
+    const getActive = () => {
+      const y = window.scrollY;
+      const threshold = y + window.innerHeight * 0.28;
+      let active: string | null = null;
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        if (top <= threshold) active = id;
+      }
+      return active;
+    };
+
     const onScroll = () => {
-      if (!labelRef.current) return;
-      const maxScroll = document.body.scrollHeight - window.innerHeight;
-      if (maxScroll <= 0) return;
-      const progress = window.scrollY / maxScroll;
-      labelRef.current.textContent = getPhaseLabel(progress);
+      labelEl.textContent = getLinearLabel(getActive());
     };
     window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [mode]);
 
   return (
     <nav
@@ -63,7 +101,7 @@ export default function Navbar() {
         className="hidden md:block text-xs tracking-[0.4em] uppercase"
         style={{ color: 'var(--muted)' }}
       >
-        Earth
+        {mode === 'journey' ? 'Earth' : 'Home'}
       </span>
 
       <button

@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useRef, useState, useCallback, type ReactNode } from 'react';
 
 interface SoundContextValue {
   muted: boolean;
